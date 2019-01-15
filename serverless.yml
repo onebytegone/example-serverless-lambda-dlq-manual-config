@@ -10,9 +10,9 @@ provider:
       -
          Effect: Allow
          Action:
-            - sqs:SendMessage
+            - sns:Publish
          Resource:
-            - 'arn:aws:sqs:us-east-1:${self:custom.accountNumber}:lambda-dlq-testing-SQSQueue'
+            - { 'Ref': 'SNSTopic' }
 
 functions:
    hello:
@@ -24,7 +24,7 @@ resources:
          Type: 'AWS::Lambda::Function'
          Properties:
             DeadLetterConfig:
-               TargetArn: 'arn:aws:sqs:us-east-1:${self:custom.accountNumber}:lambda-dlq-testing-SQSQueue'
+               TargetArn: { 'Ref': 'SNSTopic' }
       SNSTopic:
          Type: 'AWS::SNS::Topic'
          Properties:
