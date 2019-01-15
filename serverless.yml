@@ -1,0 +1,24 @@
+service: lambda-dlq-testing
+
+custom:
+   accountNumber: ${opt:account-number}
+
+provider:
+   name: aws
+   runtime: nodejs8.10
+
+functions:
+   hello:
+      handler: handler.hello
+
+resources:
+   Resources:
+      SNSTopic:
+         Type: 'AWS::SNS::Topic'
+         Properties:
+            DisplayName: 'lambda-dlq-testing-SNSTopic'
+            TopicName: 'lambda-dlq-testing-SNSTopic'
+      SQSQueue:
+         Type: 'AWS::SQS::Queue'
+         Properties:
+            QueueName: 'lambda-dlq-testing-SQSQueue'
