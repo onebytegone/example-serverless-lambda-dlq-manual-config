@@ -10,9 +10,9 @@ provider:
       -
          Effect: Allow
          Action:
-            - sns:Publish
+            - sqs:SendMessage
          Resource:
-            - { 'Ref': 'SNSTopic' }
+            - { 'Fn::GetAtt': [ 'SQSQueue', 'Arn' ] }
 
 functions:
    hello:
@@ -24,7 +24,7 @@ resources:
          Type: 'AWS::Lambda::Function'
          Properties:
             DeadLetterConfig:
-               TargetArn: { 'Ref': 'SNSTopic' }
+               TargetArn: { 'Fn::GetAtt': [ 'SQSQueue', 'Arn' ] }
       SNSTopic:
          Type: 'AWS::SNS::Topic'
          Properties:
