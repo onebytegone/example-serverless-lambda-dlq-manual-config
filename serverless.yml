@@ -6,6 +6,13 @@ custom:
 provider:
    name: aws
    runtime: nodejs8.10
+   iamRoleStatements:
+      -
+         Effect: Allow
+         Action:
+            - sns:Publish
+         Resource:
+            - 'arn:aws:sns:us-east-1:${self:custom.accountNumber}:lambda-dlq-testing-SNSTopic'
 
 functions:
    hello:
@@ -13,6 +20,11 @@ functions:
 
 resources:
    Resources:
+      HelloLambdaFunction:
+         Type: 'AWS::Lambda::Function'
+         Properties:
+            DeadLetterConfig:
+               TargetArn: 'arn:aws:sns:us-east-1:${self:custom.accountNumber}:lambda-dlq-testing-SNSTopic'
       SNSTopic:
          Type: 'AWS::SNS::Topic'
          Properties:
